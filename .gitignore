@@ -1,0 +1,12 @@
+#.gitignore
+
+references
+data
+./Email_to_Ryan.md
+./other/*
+*.py[co]
+.gitignore~
+*~
+presentation
+ipynbs
+opinion_mining/external/assoc_mining/
