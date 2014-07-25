@@ -15,15 +15,22 @@ class Business(object):
 	def __init__(self, review_df):
 		"""
 		INPUT: pandas DataFrame with each row a review, and columns:
+
 			- business_id: id of the business (must be all same)
+			- business_name: name of the Business
+			- business_ambiance: encoded list of ambiance attributes for this business
+			- business_categories: encoded list of categories for this business
+			- business_overall_stars: average stars rating for this business
+			- review_count: number of reviews that exist for this business
+
 			- review_id: id of the review
-			- stars: number of stars reviewer gave
+			- review_stars: number of stars reviewer gave
 			- text: raw text of the review
+
 			- user_id: id of the user who made review
-			- name: name of the Business
-			- categories: set of categories for Business
-			- overall_stars: overall rating of this Business
-		
+			- user_name: first name of the user who made review
+			- user_avg_stars: average number of stars given by reviewer
+
 		Takes raw DataFrame of reviews about a particular Business (where
 		each row corresponds to a particular review of the Business, and 
 			1. Stores all the metadata associated with the Business
@@ -35,9 +42,10 @@ class Business(object):
 
 		# Store business-level meta data
 		self.business_id = str(review_df.business_id.iloc[0]) # string 
-		self.business_name = str(review_df.name.iloc[0]) # string
-		self.overall_stars = int(review_df.rest_overall_stars.iloc[0]) # int
-		#self.categories = self.parse_categories(review_df.categories.iloc[0]) # TODO
+		self.business_name = str(review_df.business_name.iloc[0]) # string
+		self.overall_stars = int(review_df.business_overall_stars.iloc[0]) # int
+		self.categories = review_df.business_categories.split('<CAT>') #list of strings
+		self.ambiance = review_df.business_ambiance.split('<AMB>') #list of strings
 
 		# Create the list of Reviews for this Business
 		self.reviews = [Review(dict(review_row), business=self) for _,review_row in review_df.iterrows()]
@@ -73,7 +81,13 @@ class Business(object):
 		# TODO
 
 		aspects = self.extract_aspects()
-		return dict([(aspect, self.aspect_summary(aspect)) for aspect in aspects])			
+		asp_dict = dict([(aspect, self.aspect_summary(aspect)) for aspect in aspects])			
+
+		return {'business_id': self.business_id,
+				'business_name': self.business_name,
+				'aspect_summary': asp_dict	
+				}
+
 
 	def extract_aspects(self):
 		"""
@@ -121,6 +135,8 @@ class Business(object):
 		OUTPUT: dict with keys 'pos' and 'neg' which 
 		map to a list of positive sentences (strings) and
 		a list of negative sentences (strings) correspondingly. 
+		
+		Gets summary for a *particular* aspect. 
 		"""
 
 		pos_sents = []
@@ -128,9 +144,9 @@ class Business(object):
 
 		for sent in self.get_sents_by_aspect(aspect):
 			if sent.get_sentiment() > 0:
-				pos_sents.append(sent.raw)
+				pos_sents.append(sent.encode())
 			else: 
-				neg_sents.append(sent.raw)
+				neg_sents.append(sent.encode())
 
 		return {'pos': pos_sents,
 				'neg': neg_sents }

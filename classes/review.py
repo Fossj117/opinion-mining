@@ -21,9 +21,11 @@ class Review(object):
 		"""
 
 		# Store review-level metadata
-		self.user_id = review_dict['user_id']
-		self.stars = review_dict['rev_stars']
-		self.text = review_dict['text']		
+		self.review_id = review_dict['review_id'] #string
+		self.user_id = review_dict['user_id'] #string
+		self.user_name = review_dict['user_name'] #string
+		self.stars = int(review_dict['review_stars']) #int
+		self.text = review_dict['text']	#string	
 
 		# if passed, store reference to business this review is about
 		if business:

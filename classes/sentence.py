@@ -129,6 +129,19 @@ class Sentence(object):
 		# TODO
 		return self.features['raw'] #temporary 
 
+	def encode(self):
+		"""
+		INPUT: Sentence
+		OUTPUT: dict of this sentence's data
+
+		Encodes this sentence and associated metadata
+		to insert into database. 
+		"""
+		return {'text': self.raw,
+				'user': self.review.user_name
+				}
+
+
 	def __str__(self):
 		"""
 		INPUT: Sentence

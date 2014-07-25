@@ -20,7 +20,7 @@ def read_data():
 	INPUT: None
 	OUTPUT: pandas data frame from file
 	"""
-	return pd.read_csv('/Users/jeff/Zipfian/opinion-mining/data/high_review_restaurants.csv')
+	return pd.read_csv('./data/yelp_data/processed.csv')
 
 def main(): 
 
