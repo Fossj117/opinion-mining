@@ -44,8 +44,8 @@ class Business(object):
 		self.business_id = str(review_df.business_id.iloc[0]) # string 
 		self.business_name = str(review_df.business_name.iloc[0]) # string
 		self.overall_stars = int(review_df.business_overall_stars.iloc[0]) # int
-		self.categories = review_df.business_categories.split('<CAT>') #list of strings
-		self.ambiance = review_df.business_ambiance.split('<AMB>') #list of strings
+		self.categories = review_df.business_categories.iloc[0].split('<CAT>') #list of strings
+		self.ambiance = review_df.business_ambiance.iloc[0].split('<AMB>') #list of strings
 
 		# Create the list of Reviews for this Business
 		self.reviews = [Review(dict(review_row), business=self) for _,review_row in review_df.iterrows()]
