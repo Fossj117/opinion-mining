@@ -1,8 +1,8 @@
-<html>
-
+{% extends "base.html" %}
+{% block all %}
 	<head>
-		<b>{{ summary['business_name'] }}</b><br><br>
-		<a href="/dashboard">Return to dashboard</a>
+		 <h1><b>{{ summary['business_name'] }}</b></h1>
+		 <a href="/dashboard">Return to dashboard</a>
 	</head>
 
 	<body>
@@ -10,16 +10,19 @@
 
 		{% for aspect in summary['aspect_summary'] %}
 
-			<li><b>{{ aspect }}</b>
+			<li><h2><b>{{ aspect }}</h2></b>
+				<div class="progress">
+				  <div class="progress-bar success" style="width: {{ summary['aspect_summary'][aspect]['pos']|length }}%;"></div>
+				</div>
 				<ul>
-					<li><b>POSITIVE</b>
+					<li><h3><b>POSITIVE</h3></b>
 						<ul>
 							{% for pos_sent in summary['aspect_summary'][aspect]['pos'] %}
 								<li>{{ pos_sent['text'] }} - {{ pos_sent['user']}}</li>
 							{% endfor %}
 						</ul>	
 					</li>
-					<li><b>NEGATIVE</b>
+					<li><h3><b>NEGATIVE</h3></b>
 						<ul>
 							{% for neg_sent in summary['aspect_summary'][aspect]['neg'] %}
 								<li>{{ neg_sent['text'] }} - {{ neg_sent['user']}}</li>
@@ -33,4 +36,4 @@
 	</body>
 
 	<a href="/dashboard">Return to dashboard</a>
-</html>
+{% endblock %}

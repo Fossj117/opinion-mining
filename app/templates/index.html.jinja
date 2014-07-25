@@ -1,12 +1,17 @@
-<html>
-<head>
-<b>Aspect-Based Sentiment Analysis</b>
-<br><br>
+{% extends "base.html" %}
+{% block all %}
+<div class="page-header">
+	<h1><b>Aspect-Based Sentiment Analysis</b><br>
+	<small>Jeff Fossett</small></h1>
+</div>
 
-Please select a restaurant:
+<body> 
+	<img src="/static/img/yelp.jpg" height='150'>
+	<br>
+	<br>
 
-</head>
-<body>
+	Please select a restaurant:
+
 	<ul>
 	{% for business in businesses %}
 		<li> 
@@ -15,4 +20,4 @@ Please select a restaurant:
 	{% endfor %}
 	</ul>
 </body>
-</html>
+{% endblock %}
