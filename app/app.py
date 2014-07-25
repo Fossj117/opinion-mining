@@ -22,6 +22,14 @@ def summary(b_id):
 	summary = db.summaries.find_one({'business_id': b_id})
 	return render_template('summary.html.jinja', summary=summary)
 	
+@app.route('/project')
+def project():
+	return render_template('about.html.jinja', about="Final Project for Zipfian Academy")
+
+@app.route('/author')
+def author():
+	return render_template('about.html.jinja', about="Jeff Fossett")
+
 if __name__ == "__main__":
 
 	# Setup db connection
