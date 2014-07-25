@@ -1,13 +1,18 @@
 <html>
 <head>
+<b>Aspect-Based Sentiment Analysis</b>
+<br><br>
+
+Please select a restaurant:
+
 </head>
 <body>
 	<ul>
-	{{ for restaurant in restaurants }}
-		<li>
-			{{ restaurant['name'] }}
-		</li>
-	{{ endfor }}
+	{% for business in businesses %}
+		<li> 
+			<a href="/summaries/{{ business['business_id'] }}">{{ business['business_name'] }}</a>
+		</li> 
+	{% endfor %}
 	</ul>
 </body>
 </html>

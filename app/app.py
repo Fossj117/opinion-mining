@@ -8,25 +8,20 @@ app = Flask(__name__)
 
 @app.route('/')
 def index():
-	return redirect('/')
+	return redirect('/dashboard')
 
 @app.route('/dashboard')
 def dashboard():
-	summaries = db.summaries.find_one()
-	return str(summaries)
 
-	restaurants = db.fetch_restaurants()
-	return render_template('index.html.jinja', restaurants=restaurants)
-
-	#return summaries
-	#return render_template(summaries=summaries)
+	# get list of business names/ids from mongo
+	businesses =[b for b in db.summaries.find()]
+	return render_template('index.html.jinja', businesses = businesses)
 
 @app.route('/summaries/<b_id>')
 def summary(b_id):
-	summary = df.summaries.find({'business_id': b_id})
+	summary = db.summaries.find_one({'business_id': b_id})
 	return render_template('summary.html.jinja', summary=summary)
-
-
+	
 if __name__ == "__main__":
 
 	# Setup db connection

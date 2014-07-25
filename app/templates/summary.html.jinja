@@ -1,0 +1,36 @@
+<html>
+
+	<head>
+		<b>{{ summary['business_name'] }}</b><br><br>
+		<a href="/dashboard">Return to dashboard</a>
+	</head>
+
+	<body>
+		<ul>
+
+		{% for aspect in summary['aspect_summary'] %}
+
+			<li><b>{{ aspect }}</b>
+				<ul>
+					<li><b>POSITIVE</b>
+						<ul>
+							{% for pos_sent in summary['aspect_summary'][aspect]['pos'] %}
+								<li>{{ pos_sent['text'] }} - {{ pos_sent['user']}}</li>
+							{% endfor %}
+						</ul>	
+					</li>
+					<li><b>NEGATIVE</b>
+						<ul>
+							{% for neg_sent in summary['aspect_summary'][aspect]['neg'] %}
+								<li>{{ neg_sent['text'] }} - {{ neg_sent['user']}}</li>
+							{% endfor %}
+						</ul>
+					</li>
+				</ul>
+			</li>
+		{% endfor %}
+		</ul>
+	</body>
+
+	<a href="/dashboard">Return to dashboard</a>
+</html>
