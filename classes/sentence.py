@@ -141,7 +141,6 @@ class Sentence(object):
 				'user': self.review.user_name
 				}
 
-
 	def __str__(self):
 		"""
 		INPUT: Sentence
