@@ -20,3 +20,17 @@
 * Create a fancier summary of the comments about an aspect
 * Make the aspect-browsing UI more intuitive
 	*  Hide/unhide the individual sentences??
+	
+	
+### TODAY:
+
+Project
+
+1. Finish sentiment analysis. 
+
+Hiring: 
+
+1. Finish resume
+2. Update my info online (Molly's email)
+	* Be sure to update the github repo address. 
+	* Update name of project & description. Match with resume.  
