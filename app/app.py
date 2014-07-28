@@ -33,7 +33,7 @@ if __name__ == "__main__":
 
 	# Setup db connection
 	client = MongoClient()
-	db = client.yelptest
+	db = client.yelptest2
 	print "Connected to Mongo database"
 
 	app.run(host='0.0.0.0', port=5353, debug=True)

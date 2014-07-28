@@ -4,6 +4,8 @@ from review import Review
 from collections import Counter
 from operator import itemgetter
 
+from transformers.sentiment import SentimentModel, OpinionModel
+
 class Business(object):
 	"""
 	Class to store the full corpus of reviews and meta-data 
@@ -11,6 +13,9 @@ class Business(object):
 	generates a list of constituent Review objects. Iterating over a 
 	Business iterates over these Review objects. 
 	"""
+
+	SENTIMENT_MODEL = SentimentModel()
+	OPINION_MODEL = OpinionModel()
 
 	def __init__(self, review_df):
 		"""
@@ -88,7 +93,6 @@ class Business(object):
 				'aspect_summary': asp_dict	
 				}
 
-
 	def extract_aspects(self):
 		"""
 		INPUT: business
@@ -139,17 +143,45 @@ class Business(object):
 		Gets summary for a *particular* aspect. 
 		"""
 
+		OPIN_THRESH = 0.7
+		POS_THRESH = 0.8
+		NEG_THRESH = 0.8
+
+		# override the opinion classifier if 
+		# sentiment classifier is REALLY sure. 
+		SENTI_OVERRIDE_THRESHOLD = .95 
+
 		pos_sents = []
 		neg_sents = []
 
-		for sent in self.get_sents_by_aspect(aspect):
-			if sent.get_sentiment() > 0:
-				pos_sents.append(sent.encode())
-			else: 
-				neg_sents.append(sent.encode())
+		aspect_sents = self.get_sents_by_aspect(aspect)
+
+		for sent in aspect_sents:
+
+			prob_opin = Business.OPINION_MODEL.get_opinionated_proba(sent)
+			prob_pos = Business.SENTIMENT_MODEL.get_positive_proba(sent)
+			prob_neg = 1 - prob_pos
+
+			sent_dict = sent.encode()
+			sent_dict['prob_opin'] = prob_opin
+			sent_dict['prob_pos'] = prob_pos
+			sent_dict['prob_neg'] = prob_neg
+
+			if prob_opin > OPIN_THRESH or max(prob_pos, prob_neg) > SENTI_OVERRIDE_THRESHOLD:
+
+				if prob_pos > POS_THRESH:
+					pos_sents.append(sent_dict)
+				elif prob_neg > NEG_THRESH:
+					neg_sents.append(sent_dict)
+
+		n_sents = len(aspect_sents) if len(aspect_sents) > 0 else 1
 
 		return {'pos': pos_sents,
-				'neg': neg_sents }
+				'neg': neg_sents, 
+				'num_pos': len(pos_sents),
+				'num_neg': len(neg_sents),
+				'frac_pos': len(pos_sents) / n_sents
+				}
 
 	def get_sents_by_aspect(self, aspect):
 		"""

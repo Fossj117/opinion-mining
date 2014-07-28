@@ -1,16 +1,17 @@
 import nltk
+import numpy as np
 
 from nltk.stem.wordnet import WordNetLemmatizer
-from transformers.tokenizers import MyPottsTokenizer
-from transformers.featurizers import LiuFeaturizer
 
-from transformers.aspect_extraction.extractor import SentenceAspectExtractor
+from transformers.tokenizers import MyPottsTokenizer
+from transformers.featurizers import MetaFeaturizer, SubjFeaturizer, LiuFeaturizer
+from transformers.asp_extractors import SentenceAspectExtractor
 
 class Sentence(object):
 	"""
-	Class corresponding to a sentence in a review. Manages word tokenization
-	and part of speech (POS) tagging and stores/provides access to each version 
-	of the sentence via getter methods (get_raw, get_tokens, get_pos_tokens)
+	Class corresponding to a sentence in a review. Stores/manages word tokenization,
+	part of speech (POS)tagging and lemmatization as well as some components
+	of the final analysis such as aspect extraction. 
 	"""
 
 	# Tokenizer for converting a raw string (sentence) to a list of strings (words)
@@ -24,7 +25,7 @@ class Sentence(object):
 	LEMMATIZER = WordNetLemmatizer()
 
 	# Featurizer
-	FEATURIZER = LiuFeaturizer()
+	FEATURIZER = MetaFeaturizer([SubjFeaturizer(), LiuFeaturizer()]) #combine two featurizer objects
 
 	# Aspect Extractor
 	ASP_EXTRACTOR = SentenceAspectExtractor()
@@ -44,9 +45,10 @@ class Sentence(object):
 
 		if review: #if passed, store a reference to the review this came from
 			self.review = review
+			self.stars = self.review.stars # star pointer to number of stars (for featurization)
 
 		# compute and store features for this sentence
-		self.features = self.compute_features()
+		#self.features = self.compute_features()
 
 		# compute and store aspects for this sentence
 		self.aspects = self.compute_aspects()
@@ -95,14 +97,22 @@ class Sentence(object):
 
 		return lemmatized_sent
 
-	def compute_features(self):
+	def get_features(self, asarray = False):
 		"""
 		INPUT: Sentence
-		OUTPUT: dict mapping string to ints
+		OUTPUT: dict mapping string to ints/floats
 		
-		Returns a feature dict for this Sentence
+		Returns an (ordered) feature dict for this Sentence
 		"""
-		return Sentence.FEATURIZER.featurize(self)
+
+		if not hasattr(self, 'features'):
+			self.features = Sentence.FEATURIZER.featurize(self)
+
+		if not asarray:
+			return self.features
+
+		else:
+			return np.array([val for _, val in self.features.iteritems()])
 
 	def compute_aspects(self):
 		"""
@@ -120,14 +130,6 @@ class Sentence(object):
 			return asp_string in self.raw
 		except:
 			return False
-
-	def get_sentiment(self):
-		"""
-		INPUT: Sentence
-		OUTPUT: int (sentiment score)
-		"""
-		# TODO
-		return self.features['raw'] #temporary 
 
 	def encode(self):
 		"""
@@ -149,3 +151,7 @@ class Sentence(object):
 		Return a string representation of this sentence (i.e. raw text of the sentence)
 		"""
 		return self.raw
+
+
+
+

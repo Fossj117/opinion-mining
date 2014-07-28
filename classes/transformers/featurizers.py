@@ -1,21 +1,51 @@
 from __future__ import division
-from sentiment.senti_utils import NegationSuffixAdder
+from tokenizers import NegationSuffixAdder
+from collections import OrderedDict
 
 class BaseFeaturizer(object):
 
 	def __init__(self):
 		pass
 
-	def featurize(self, Sentence):
+	def featurize(self, sent):
 		"""
 		Return a feature dict for this Sentence
 		"""
 		pass
 
+class MetaFeaturizer(BaseFeaturizer):
+
+	def __init__(self, featurizer_list):
+		"""
+		INPUT: MetaFeaturizer, list of BaseFeaturizer objs
+		
+		Combines a number of featurizer objects
+		"""
+
+		self.featurizer_list = featurizer_list
+
+	def featurize(self, sent):
+		"""
+		INPUT: MetaFeaturizer, Sentence
+		OUPUT: dict
+
+		Returns combined feature dict for this sentence
+		based on constituent featurizers
+		"""
+
+		features = {}
+
+		for featurizer in self.featurizer_list:
+
+			features = dict(features.items() + featurizer.featurize(sent).items())
+
+		features['review_stars'] = sent.stars # add one last feature
+
+		return OrderedDict(sorted(features.items())) # need to preserve order. 
 
 class SubjFeaturizer(BaseFeaturizer):
 	
-	PATH_TO_LEXICON = '/Users/jeff/Projects/yelp_opinion_mining/data/Lexicons/subjectivity_clues_hltemnlp05/subjclueslen1-HLTEMNLP05.tff'
+	PATH_TO_LEXICON = '/Users/jeff/Projects/yelp_opinion_mining/raw_data/Lexicons/subjectivity_clues_hltemnlp05/subjclueslen1-HLTEMNLP05.tff'
 
 	TAG_MAP = {'NN': 'noun',
 			   'NNS': 'noun',
@@ -48,7 +78,7 @@ class SubjFeaturizer(BaseFeaturizer):
 		lex_dict = {}
 
 		for wrd in parsed: 
-			lex_dict = dict(lexicon.items() + wrd.items())
+			lex_dict = dict(lex_dict.items() + wrd.items())
 
 		return lex_dict
 
@@ -59,7 +89,7 @@ class SubjFeaturizer(BaseFeaturizer):
 
 		Parses one line of the subjectivity lexicon
 		"""
-		print raw_line
+		
 		line = raw_line.strip().split(" ")
 		out = dict([o.split("=") for o in line])
 
@@ -79,9 +109,8 @@ class SubjFeaturizer(BaseFeaturizer):
 
 		n_weaksubj = 0
 		n_strongsubj = 0
-
-		n_positive = 0
-		n_negative = 0
+		# n_positive = 0
+		# n_negative = 0
 
 		n_wrds = len(sent.tokenized)
 
@@ -98,6 +127,11 @@ class SubjFeaturizer(BaseFeaturizer):
 					n_strongsubj += 1
 				elif subj_type=='weaksubj':
 					n_weaksubj += 1
+
+				# if polarity=='negative':
+				# 	n_negative +=1
+				# elif polarity=='positive':
+				# 	n_positive +=1
 
 		features = {}
 		features['frac_strongsubj'] = n_strongsubj / n_wrds
@@ -153,7 +187,7 @@ class LiuFeaturizer(BaseFeaturizer):
     Download lexicon at: http://www.cs.uic.edu/~liub/FBS/opinion-lexicon-English.rar
 	"""
 
-	PATH_TO_LEXICONS = '/Users/jeff/Projects/yelp_opinion_mining/data/Lexicons'
+	PATH_TO_LEXICONS = '/Users/jeff/Projects/yelp_opinion_mining/raw_data/Lexicons'
 	NEG_SUFFIXER = NegationSuffixAdder()
 
 	def __init__(self):
@@ -219,6 +253,7 @@ class LiuFeaturizer(BaseFeaturizer):
 		nouns = {'NN', 'NNS', 'NNP', 'NNPS'}
 		adjs = {'JJ', 'JJR', 'JJS'}
 		advbs = {'RB', 'RBR', 'RBS'}
+		pronouns = {'PRP', 'PRP$'}
 
 		# extract pos tags for this sentence
 		tags = [pos for _, pos in sent.pos_tagged]
@@ -236,13 +271,22 @@ class LiuFeaturizer(BaseFeaturizer):
 		frac_adjs = n_adjs / n_wrds
 		frac_advbs = n_advbs / n_wrds
 
+		# binary variables for presence/absence of indicative POS tags
+		has_pronoun = 1 if any([tag in pronouns for tag in tags]) else 0
+		has_cardinal = 1 if any([tag in pronouns for tag in tags]) else 0 
+		has_modal = 1 if any([tag=='MD' and wrd!='will' for wrd, tag in sent.pos_tagged]) else 0
+
 		# return feature dict
 		return {'n_nouns': n_nouns,
 				'n_adjs': n_adjs,
 				'n_advbs': n_advbs,
 				'frac_nouns': frac_nouns,
 				'frac_adjs': frac_adjs,
-				'frac_advbs': frac_advbs}
+				'frac_advbs': frac_advbs,
+				'has_pronoun': has_pronoun,
+				'has_cardinal': has_cardinal,
+				'has_modal': has_modal
+				}
 
 	def get_lex_feats(self, sent):
 		'''
@@ -288,5 +332,6 @@ class LiuFeaturizer(BaseFeaturizer):
 		features['frac_neg'] = num_neg / sent_len
 
 		return features
+
 
 
