@@ -5,3 +5,4 @@ data
 *.py[co]
 .gitignore~
 *~
+raw_data
