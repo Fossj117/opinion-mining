@@ -55,8 +55,14 @@ sys.path.append('/Users/jeff/Projects/yelp_opinion_mining')
 from classes.sentence import Sentence
 
 print "Featurizing the training data frame (may take a little while)"
-featurized_df = pd.DataFrame([Sentence(sent).compute_features() for sent in final_df.sentence])
-featurized_df['review_stars'] = final_df.review_stars
+
+sents = [Sentence(sent) for sent in final_df.sentence]
+
+for sent, stars in zip(sents, final_df.review_stars): 
+	sent.stars =  stars # pass the number of stars in
+
+featurized_df = pd.DataFrame([sent.get_features() for sent in sents])
+
 featurized_df['sentiment'] = final_df.sentiment
 featurized_df = featurized_df[~featurized_df.sentiment.isnull()]
 
@@ -82,8 +88,8 @@ df_holdout = featurized_df.ix[rows].copy()
 df_devel = featurized_df.drop(rows).copy()
 
 # Write to disk
-df_holdout.to_csv("./data/featurized_pristine_holdout.csv")
-df_devel.to_csv("./data/featurized_development.csv")
+df_holdout.to_csv("./data/featurized_pristine_holdout.csv", index=False)
+df_devel.to_csv("./data/featurized_development.csv", index=False)
 
 print "Done."
 

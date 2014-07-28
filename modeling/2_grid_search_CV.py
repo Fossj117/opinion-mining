@@ -86,7 +86,7 @@ def run_opinion_grid_search(full_df):
 	params = [{'clf__kernel': ['rbf'], 'clf__gamma': [100, 10, 1, 1e-2, 1e-3, 1e-4],'clf__C': [.01, 1, 10, 100, 1000]},
 	 			  {'clf__kernel': ['linear'], 'clf__C': [.01, 1, 10, 100, 1000]}]
 	# params = [{'clf__kernel': ['rbf']},
-	# 		  {'clf__kernel': ['linear']}]
+	#  		  {'clf__kernel': ['linear']}]
 
 	grid_search = GridSearchCV(pipeline, params, n_jobs = -1, verbose=.5, scoring='roc_auc')
 
@@ -123,7 +123,7 @@ def run_senti_grid_search(full_df):
 
 	clf = LogisticRegression(class_weight='auto')
 	params = {'C':[0.01, 0.1, 1.0, 10.0], 'penalty': ['l1', 'l2']}
-	#params = {'C': [1.0]}
+	# params = {'C': [1.0]}
 
 	grid_search = GridSearchCV(clf, params, n_jobs = -1, verbose=.5, scoring='roc_auc')
 
@@ -153,7 +153,7 @@ if __name__ == "__main__":
 	print ""
 	print development_df.opinionated.value_counts()
 
-	opin_gs, opin_best_est = run_opinion_grid_search(development_df	)
+	opin_gs, opin_best_est = run_opinion_grid_search(development_df)
 
 	senti_gs, senti_best_est = run_senti_grid_search(development_df)
 
