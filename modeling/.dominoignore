@@ -1,0 +1,32 @@
+# Domino
+domino.log
+dominodump-*
+
+# Source control
+.git/
+.gitignore
+.svn/
+
+# IntelliJ/PyCharm project files
+.idea/
+
+# Python
+*.pyc
+
+# R
+.Rhistory
+*.r.Rout
+*.R.Rout
+*.Rproj
+.Rproj.user/
+Rprof.out
+
+# Matlab/Octave
+octave-core
+*.asv
+*.m~
+
+# Mac OS X system files
+.DS_Store
+
+
