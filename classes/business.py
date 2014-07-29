@@ -149,6 +149,8 @@ class Business(object):
 		"""
 
 		OPIN_THRESH = 0.7
+		HARD_MIN_OPIN_THRESH = 0.6
+
 		POS_THRESH = 0.85
 		NEG_THRESH = 0.85
 
@@ -178,7 +180,7 @@ class Business(object):
 			sent_dict['prob_neg'] = prob_neg
 			sent_dict['sorter'] = prob_opin*max(prob_pos, prob_neg) #used to order sentences for display
 
-			if prob_opin > OPIN_THRESH or max(prob_pos, prob_neg) > SENTI_OVERRIDE_THRESHOLD:
+			if prob_opin > OPIN_THRESH or (max(prob_pos, prob_neg) > SENTI_OVERRIDE_THRESHOLD and prob_opin > HARD_MIN_OPIN_THRESH):
 
 				if prob_pos > POS_THRESH:
 					pos_sents.append(sent_dict)

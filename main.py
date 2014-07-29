@@ -30,7 +30,7 @@ def main():
 
 	print "Loading data..."
 	df = read_data()
-	bus_ids = df.business_id.unique()[-40:-30]
+	bus_ids = df.business_id.unique()[-50:-48]
 
 	for bus_id in bus_ids:
 
