@@ -78,34 +78,37 @@ class Business(object):
 	def aspect_based_summary(self):
 		"""
 		INPUT: Business
-		OUTPUT: Complicated JSON object thing. 
+		OUTPUT: dict 
 
 		Returns the final output JSON object, encoding the aspect-based
 		sentiment summary for the given business, ready to be written to MongoDB.
 		"""
-		# TODO
 
 		aspects = self.extract_aspects()
 		asp_dict = dict([(aspect, self.aspect_summary(aspect)) for aspect in aspects])			
 
+		asp_dict = self.filter_asp_dict(asp_dict) # final filtering
+
 		return {'business_id': self.business_id,
 				'business_name': self.business_name,
+				'business_stars': self.overall_stars,
 				'aspect_summary': asp_dict	
 				}
 
-	def extract_aspects(self):
+	def extract_aspects(self, single_word_thresh=0.012, multi_word_thresh=0.003):
 		"""
-		INPUT: business
+		INPUT:
+			- Business
+			- single_word_thresh : how common does a single-word aspect need to be
+								   in order to get included in the summary?
+			- multi_word_thresh : how common does a multi-word aspect need to be in
+								  order to get included in the summary? 
+
 		OUTPUT: list of lists of strings
 			- e.g. [['pepperoni','pizza'], ['wine'], ['service']]
 
-		Returns a list of the aspects that are 
-		most often commented on in this business 
+		Returns a list of the aspects that are most often commented on in this business 
 		"""
-
-		# TUNING PARAMS
-		SINGLE_WORD_THRESH = 0.012
-		MULTI_WORD_THRESH = 0.003
 
 		asp_sents = [sent.aspects for rev in self for sent in rev]
 		n_sents = float(len(asp_sents))
@@ -124,14 +127,16 @@ class Business(object):
 					continue # shouldn't happen
 
 		# Get sufficiently-common single- and multi-word aspects
-		single_asps = [(asp, count) for asp, count in Counter(single_asps).most_common(30) if count/n_sents > SINGLE_WORD_THRESH]
-		multi_asps = [(asp, count) for asp, count in Counter(multi_asps).most_common(30) if count/n_sents > MULTI_WORD_THRESH]
+		single_asps = [(asp, count) for asp, count in Counter(single_asps).most_common(30) if count/n_sents > single_word_thresh]
+		multi_asps = [(asp, count) for asp, count in Counter(multi_asps).most_common(30) if count/n_sents > multi_word_thresh]
 
 		# filter redundant single-word aspects
 		single_asps = self.filter_single_asps(single_asps, multi_asps)
 
-		# return the full aspect list, sorted by frequency
-		return [asp for asp,_ in sorted(single_asps + multi_asps, key=itemgetter(1))]
+		# the full aspect list, sorted by frequency
+		all_asps =  [asp for asp,_ in sorted(single_asps + multi_asps, key=itemgetter(1))]
+
+		return self.filter_all_asps(all_asps)
 
 	def aspect_summary(self, aspect):
 		"""
@@ -144,12 +149,14 @@ class Business(object):
 		"""
 
 		OPIN_THRESH = 0.7
-		POS_THRESH = 0.8
-		NEG_THRESH = 0.8
+		POS_THRESH = 0.85
+		NEG_THRESH = 0.85
 
 		# override the opinion classifier if 
 		# sentiment classifier is REALLY sure. 
 		SENTI_OVERRIDE_THRESHOLD = .95 
+
+		SENTENCE_LEN_THRESHOLD = 30 # number of words
 
 		pos_sents = []
 		neg_sents = []
@@ -157,6 +164,9 @@ class Business(object):
 		aspect_sents = self.get_sents_by_aspect(aspect)
 
 		for sent in aspect_sents:
+
+			if len(sent.tokenized) > SENTENCE_LEN_THRESHOLD:
+				continue #filter really long sentences
 
 			prob_opin = Business.OPINION_MODEL.get_opinionated_proba(sent)
 			prob_pos = Business.SENTIMENT_MODEL.get_positive_proba(sent)
@@ -166,6 +176,7 @@ class Business(object):
 			sent_dict['prob_opin'] = prob_opin
 			sent_dict['prob_pos'] = prob_pos
 			sent_dict['prob_neg'] = prob_neg
+			sent_dict['sorter'] = prob_opin*max(prob_pos, prob_neg) #used to order sentences for display
 
 			if prob_opin > OPIN_THRESH or max(prob_pos, prob_neg) > SENTI_OVERRIDE_THRESHOLD:
 
@@ -174,10 +185,10 @@ class Business(object):
 				elif prob_neg > NEG_THRESH:
 					neg_sents.append(sent_dict)
 
-		n_sents = len(aspect_sents) if len(aspect_sents) > 0 else 1
+		n_sents = len(pos_sents) + len(neg_sents) if len(pos_sents) + len(neg_sents) > 0 else 1
 
-		return {'pos': pos_sents,
-				'neg': neg_sents, 
+		return {'pos': sorted(pos_sents, key=itemgetter('prob_pos'), reverse=True), # sort by confidence
+				'neg': sorted(neg_sents, key=itemgetter('prob_neg'), reverse=True), # sort by confidence
 				'num_pos': len(pos_sents),
 				'num_neg': len(neg_sents),
 				'frac_pos': len(pos_sents) / n_sents
@@ -200,6 +211,27 @@ class Business(object):
 		"""
 
 		return [(sing_asp, count) for sing_asp, count in single_asps if not any([sing_asp in mult_asp for mult_asp, _ in multi_asps])]
+
+	def filter_asp_dict(self, asp_dict, num_valid_threshold = 5):
+		"""
+		INPUT: Business, aspect dictionary, int
+		OUTPUT: filtered aspect dictionary
+
+		Filters aspects that don't have enough valid sentences 
+		"""
+		return dict([(k, v) for k,v in asp_dict.iteritems() if v['num_pos'] > num_valid_threshold or v['num_neg'] > num_valid_threshold])
+
+	def filter_all_asps(self, asps):
+		"""
+		INPUT: Business
+		OUTPUT: list of strings
+		"""
+		# TODO if needed
+		# filter aspects that are too close to the restaurant's name?
+		return asps
+
+
+
 
 
 

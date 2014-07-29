@@ -126,10 +126,12 @@ class Sentence(object):
 		INPUT: Sentence, string (aspect)
 		OUTPUT: boolean
 		"""
-		try:
-			return asp_string in self.raw
-		except:
-			return False
+
+		# re-tokenize the aspect
+		asp_toks = asp_string.split(" ")
+
+		# return true if all the aspect tokens are in this sentence 
+		return all([tok in self.tokenized for tok in asp_toks])
 
 	def encode(self):
 		"""
