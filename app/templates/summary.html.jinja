@@ -5,33 +5,64 @@
 	</head>
 
 	<body>
-		<ul>
 
+		<ul class="nav nav-pills" role="tablist">
+		
 		{% for aspect in summary['aspect_summary'] %}
 
-			<li><h2><b>{{ aspect }}</h2></b>
-				<div class="progress">
-				  <div class="progress-bar success" style="width: {{ summary['aspect_summary'][aspect]['pos']|length }}%;"></div>
-				</div>
-				<ul>
-					<li><h3><b>POSITIVE</h3></b>
-						<ul>
-							{% for pos_sent in summary['aspect_summary'][aspect]['pos'] %}
-								<li>{{ pos_sent['text'] }} - {{ pos_sent['user']}}</li>
-							{% endfor %}
-						</ul>	
-					</li>
-					<li><h3><b>NEGATIVE</h3></b>
-						<ul>
-							{% for neg_sent in summary['aspect_summary'][aspect]['neg'] %}
-								<li>{{ neg_sent['text'] }} - {{ neg_sent['user']}}</li>
-							{% endfor %}
-						</ul>
-					</li>
-				</ul>
-			</li>
+			{% if loop.index == 1 %}
+				<li class="active"><a href=#{{ aspect.replace(" ", "_").replace("'", "_") }} role="tab" data-toggle="tab">{{ aspect }} </a></li>
+			{% else %}
+				<li><a href=#{{ aspect.replace(" ", "_").replace("'", "_") }} role="tab" data-toggle="tab">{{ aspect }} </a></li>
+			{% endif %}
+
 		{% endfor %}
+
 		</ul>
+
+		<div class="tab-content">
+		 
+		{% for aspect in summary['aspect_summary'] %} 
+
+		  {% if loop.index == 1%}	
+		  <div class="tab-pane active" id="{{ aspect.replace(" ", "_").replace("'", "_")}}">
+		  {% else %}
+		  <div class="tab-pane" id="{{ aspect.replace(" ", "_").replace("'", "_")}}">
+		  {% endif %}
+
+			<h1><b>{{ aspect }}</h1></b>
+
+		  	<div class="progress">
+				  	<div class="progress-bar progress-bar-success" style="width: {{ summary['aspect_summary'][aspect]['frac_pos']*100 }}%;">
+				  		<span>Positive</span>
+				  	</div>
+				  	<div class="progress-bar progress-bar-danger" style="width: {{ 100 - summary['aspect_summary'][aspect]['frac_pos']*100 }}%">
+				  		<span>Negative</span>
+				  	</div>
+			</div>
+
+			<h2><b>Positive <span class="label label-success">{{ summary['aspect_summary'][aspect]['num_pos'] }}</span></b></h2>
+				<ul>
+					{% for pos_sent in summary['aspect_summary'][aspect]['pos'] %}
+						{% if loop.index | less_than_ten %}
+							<li>{{ pos_sent['text'] }} - {{ pos_sent['user']}} - confidence: {{ pos_sent['prob_pos'] }} - opin: {{ pos_sent['prob_opin']}}</li>
+						{% endif %}
+					{% endfor %}
+				</ul>	
+			<h2><b>Negative <span class="label label-danger">{{ summary['aspect_summary'][aspect]['num_neg'] }}</span></b></h2>
+				<ul>
+					{% for neg_sent in summary['aspect_summary'][aspect]['neg'] %}
+						{% if loop.index | less_than_ten %}
+						<li>{{ neg_sent['text'] }} - {{ neg_sent['user']}} - confidence: {{ neg_sent['prob_neg'] }} - opin: {{ neg_sent['prob_opin']}} </li>
+						{% endif %}
+					{% endfor %}
+				</ul>
+		  </div>
+		
+		{% endfor %}
+
+		</div>
+
 	</body>
 
 	<a href="/dashboard">Return to dashboard</a>

@@ -1,17 +1,20 @@
 {% extends "base.html" %}
 {% block all %}
 <div class="page-header">
-	<h1><b>Aspect-Based Sentiment Analysis</b><br>
-	<small>Jeff Fossett</small></h1>
+	<h1><b><font color="red">Y</font>elp S<font color="red">um</font>marization <font color="red">M</font>iner (<font color="red">YUMM</font>)</b><br>
+	<small>Aspect-Based Sentiment Analysis on Yelp Reviews</small><br>
 </div>
 
 <body> 
 	<img src="/static/img/yelp.jpg" height='150'>
 	<br>
 	<br>
-
-	Please select a restaurant:
-
+	<p> YUMM uses natural language processing and machine learning to automatically generate an aspect-based sentiment summary from the raw text of Yelp reviews. 
+	<br>
+	<br>
+	Please select a restaurant to explore YUMM's results:
+	</p>
+	<br>
 	<ul>
 	{% for business in businesses %}
 		<li> 
@@ -19,5 +22,8 @@
 		</li> 
 	{% endfor %}
 	</ul>
+	<br>
+	<br>
+
 </body>
 {% endblock %}
