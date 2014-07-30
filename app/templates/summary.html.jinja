@@ -45,7 +45,11 @@
 				<ul>
 					{% for pos_sent in summary['aspect_summary'][aspect]['pos'] %}
 						{% if loop.index | less_than_ten %}
-							<li>{{ pos_sent['text'] }} - {{ pos_sent['user']}} - confidence: {{ pos_sent['prob_pos'] }} - opin: {{ pos_sent['prob_opin']}}</li>
+							<li>
+								{{ pos_sent['text'] }} - {{ pos_sent['user']}} 
+								<!-- <span class="label label-default"> {{ pos_sent['prob_opin'] | round(2) }} </span> 
+								<span class="label label-success"> {{ pos_sent['prob_pos'] | round(2) }} </span>
+ -->							</li>
 						{% endif %}
 					{% endfor %}
 				</ul>	
@@ -53,7 +57,11 @@
 				<ul>
 					{% for neg_sent in summary['aspect_summary'][aspect]['neg'] %}
 						{% if loop.index | less_than_ten %}
-						<li>{{ neg_sent['text'] }} - {{ neg_sent['user']}} - confidence: {{ neg_sent['prob_neg'] }} - opin: {{ neg_sent['prob_opin']}} </li>
+						<li>
+							{{ neg_sent['text'] }} - {{ neg_sent['user']}} 
+							<!-- <span class="label label-default"> {{ neg_sent['prob_opin'] | round(2) }} </span>
+							<span class="label label-danger"> {{ neg_sent['prob_neg'] | round(2) }} </span> -->
+						</li>
 						{% endif %}
 					{% endfor %}
 				</ul>

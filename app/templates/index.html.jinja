@@ -15,12 +15,13 @@
 	Please select a restaurant to explore YUMM's results:
 	</p>
 	<br>
+
 	<ul>
-	{% for business in businesses %}
-		<li> 
-			<a href="/summaries/{{ business['business_id'] }}">{{ business['business_name'] }} </a>
-		</li> 
-	{% endfor %}
+		{% for business in businesses %}
+			<li> 
+				<a href="/summaries/{{ business['business_id'] }}">{{ business['business_name'] }} </a>
+			</li> 
+		{% endfor %}
 	</ul>
 	<br>
 	<br>
