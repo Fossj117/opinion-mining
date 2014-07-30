@@ -17,10 +17,6 @@ class Sentence(object):
 	# Tokenizer for converting a raw string (sentence) to a list of strings (words)
 	WORD_TOKENIZER = MyPottsTokenizer(preserve_case=False)
 	
-	#STANFORD_POS_TAGGER = POSTagger(
-	#			'/Users/jeff/Zipfian/opinion-mining/references/resources/stanford-pos/stanford-postagger-2014-06-16/models/english-bidirectional-distsim.tagger', 
-	#           '/Users/jeff/Zipfian/opinion-mining/references/resources/stanford-pos/stanford-postagger-2014-06-16/stanford-postagger.jar')
-
 	# Lemmatizer
 	LEMMATIZER = WordNetLemmatizer()
 
@@ -74,8 +70,6 @@ class Sentence(object):
 		the standard NLTK POS tagger. 
 		"""
 
-		# Using Stanford tagger: 
-		#return Sentence.STANFORD_POS_TAGGER.tag(tokenized_sent)
 		return nltk.pos_tag(tokenized_sent)
 
 	def lemmatize(self, pos_tagged_sent):
@@ -99,10 +93,11 @@ class Sentence(object):
 
 	def get_features(self, asarray = False):
 		"""
-		INPUT: Sentence
+		INPUT: Sentence, boolean
 		OUTPUT: dict mapping string to ints/floats
 		
-		Returns an (ordered) feature dict for this Sentence
+		Returns an (ordered) feature dict for this Sentence. If asarray is 
+		True, returns an np feature array instead (unlabeled). 
 		"""
 
 		if not hasattr(self, 'features'):
@@ -118,6 +113,8 @@ class Sentence(object):
 		"""
 		INPUT: Sentence
 		OUTPUT: list of lists of strings (i.e. list of aspects)
+
+		Get the candidate aspects contained in this sentence. 
 		"""
 		return Sentence.ASP_EXTRACTOR.get_sent_aspects(self)
 
@@ -125,6 +122,8 @@ class Sentence(object):
 		"""
 		INPUT: Sentence, string (aspect)
 		OUTPUT: boolean
+
+		Return true if this sentence contains the given aspect string. 
 		"""
 
 		# re-tokenize the aspect
@@ -138,8 +137,8 @@ class Sentence(object):
 		INPUT: Sentence
 		OUTPUT: dict of this sentence's data
 
-		Encodes this sentence and associated metadata
-		to insert into database. 
+		Encodes this sentence and associated metadata, for
+		insertion into the database. 
 		"""
 		return {'text': self.raw,
 				'user': self.review.user_name

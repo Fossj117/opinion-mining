@@ -145,10 +145,11 @@ class Business(object):
 		map to a list of positive sentences (strings) and
 		a list of negative sentences (strings) correspondingly. 
 		
-		Gets summary for a *particular* aspect. 
+		Gets summary for a *particular* aspect. Summary includes primarily
+		the sorted positive/negative sentences mentioning this apsect.
 		"""
 
-		OPIN_THRESH = 0.7
+		OPIN_THRESH = 0.75
 		HARD_MIN_OPIN_THRESH = 0.6
 
 		POS_THRESH = 0.85
@@ -198,7 +199,7 @@ class Business(object):
 
 	def get_sents_by_aspect(self, aspect):
 		"""
-		INPUT: 
+		INPUT: Business, string (aspect)  
 		OUTPUT: List of Sentence objects
 		"""
 		return [sent for review in self for sent in review if sent.has_aspect(aspect)] 
@@ -228,7 +229,6 @@ class Business(object):
 		INPUT: Business
 		OUTPUT: list of strings
 		"""
-		# TODO if needed
 		# filter aspects that are too close to the restaurant's name?
 		return asps
 
