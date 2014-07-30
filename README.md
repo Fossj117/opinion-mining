@@ -1,4 +1,5 @@
-### Aspect-Based Opinion Mining on Yelp Reviews
+### Yelp Summarization Miner (YUMM)
+#### Aspect-Based Opinion Mining on Yelp Reviews
 
 The goal of this project is to use machine learning and NLP to generate a helpful *aspect-based summary* from the raw text of reviews about a particular restaurant or product. An aspect-based summary of a set of reviews about, say, a pizza place might look as follows: 
 
