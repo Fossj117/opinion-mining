@@ -50,22 +50,6 @@ def main():
 
 if __name__ == "__main__":
 	main()
-	# import time
 
-	# OUTFILE = "test_summary.json"
-
-	# print "Loading data..."
-	# df = read_data()
-	# bus_id = df.business_id.iloc[4000]
-
-	# start = time.time()
-	# biz = Business(get_reviews_for_business(bus_id, df))
-	# summary = biz.aspect_based_summary()
-
-	# with open(OUTFILE, 'w') as f:
-	# 	f.write(json.dumps(summary))
-
-	# elapsed = time.time() - start
-	# print "Time elapsed: %d" % elapsed
 
 

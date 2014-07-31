@@ -10,7 +10,11 @@ YUMM generates a summary of this form in a completely automated fashion from the
 
 When one of the aspects is selected, YUMM displays a summary of reviewers' attitudes towards the aspect. The Positive/Negative bar (see screenshot) displays the overall balance of sentiment that YUMM uncovered in the data with respect to the chosen aspect. YUMM also provides supporting evidence in the form of snippets from reviews. 
 
-#### References
+### Code Overview
+
+If you are interested in exploring YUMM's code, the main directories of interest are `./classes`, which contains the code for YUMM's primary summary-generation pipeline, and `./modeling`, which contains the code for training/optimizing the machine learning models that currently power YUMM.  
+
+### References
 
 The problem of automatic review summarization has been addressed in academic literature. See especially: 
 
