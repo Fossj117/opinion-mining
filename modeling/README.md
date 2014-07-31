@@ -6,4 +6,4 @@ The files in this directory are responsible for training and optimizing the mach
 
 * `1_featurize_training_data.py` : responsible for reading in the manually-tagged training data and featurizing it for model training. 
 
-* `2_grid_search_CV.py` : runs a grid search to optimize hyperparameters for both the opinion and sentiment models. In practice, this was always run using [domino](http://www.dominoup.com/).
+* `2_grid_search_CV.py` : runs a grid search to optimize hyperparameters for both the opinion and sentiment models. In practice, this was always run using [domino](http://www.dominoup.com/). Note that the final models tuned by the grid search are ultimately pickled, for later use in YUMM's main summary-generation pipeline (see `../classes`). 
