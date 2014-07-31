@@ -30,7 +30,7 @@ Opinion_Model Classification Report:
 avg / total       0.74      0.67      0.69       608
 ```
 
-![](./results/Opinion_Model.png =500x)
+![](/modeling/results/Opinion_Model.png =500x)
 
 ##### Sentiment Model: 
 
@@ -46,7 +46,7 @@ Sentiment_Model Classification Report:
 avg / total       0.84      0.78      0.80       445
 ```
 
-![](./results/Sentiment_Model.png =500x)
+![](/modeling/results/Sentiment_Model.png =500x)
 
 Note that precision is currently quite low on classifying Negative sentences; I expect that this is primarily due to the small amount of training data that was available, the majority of which was *not* negative: 
 
