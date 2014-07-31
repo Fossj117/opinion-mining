@@ -2,9 +2,9 @@
 
 **Y**elp s**UM**marization **M**iner (or **YUMM**) is an automated system--based on natural language processing and machine learning--for generating a digestable, human-understandable, and browsable summary of the opinions expressed in a corpus of Yelp reviews about a particular restaurant. YUMM's summary aims to provide the user with an at-a-glance understanding of a restaurant's features (or *aspects*) as well as reviewers' attitudes towards these features. 
 
-You can check out a demo of YUMM online [here](http://www.jeffreyfossett.com). If that's not your style, here's a screenshot of YUMM in action: 
+You can check out a demo of YUMM online [here](http://www.jeffreyfossett.com). If that's not your style, here's a screenshot of YUMM in action (for a restaurant called **Zinburger**): 
 
-![](YUMM.png)
+![](yumm_screenshot.png)
 
 #### References
 
