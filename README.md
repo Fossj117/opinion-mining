@@ -6,6 +6,10 @@ You can check out a demo of YUMM online [here](http://www.jeffreyfossett.com). I
 
 ![](yumm_screenshot.png)
 
+YUMM generates a summary of this form in a completely automated fashion from the raw text (and metadata) of Yelp reviews about a restaurant. The items in blue at the top are the "aspects" that YUMM has extracted from the reviews ("service", "food", "sweet potato frieds" etc.). These are the salient features of the restaurant that reviewers often comment on. 
+
+When one of the aspects is selected, YUMM displays a summary of reviewers' attitudes towards the aspect. The Positive/Negative bar (see screenshot) displays the overall balance of sentiment that YUMM uncovered in the data with respect to the chosen aspect. YUMM also provides supporting evidence in the form of snippets from reviews. 
+
 #### References
 
 The problem of automatic review summarization has been addressed in academic literature. See especially: 
