@@ -81,7 +81,12 @@ class Business(object):
 		OUTPUT: dict 
 
 		Returns the final output JSON object, encoding the aspect-based
-		sentiment summary for the given business, ready to be written to MongoDB.
+		sentiment summary for the given business, ready to be written to MongoDB, and
+		containing everything (in correct orders) that will be displayed by
+		the front end. 
+
+		Note: This is the highest level analytical method--effectively "runs" the full
+		analysis for this Business. 
 		"""
 
 		aspects = self.extract_aspects()
@@ -107,9 +112,14 @@ class Business(object):
 		OUTPUT: list of lists of strings
 			- e.g. [['pepperoni','pizza'], ['wine'], ['service']]
 
-		Returns a list of the aspects that are most often commented on in this business 
+		Returns a list of the aspects that are most often commented on in this business. Note
+		that, currently, aspect extraction is based on frequent noun-phrase counting. That is, 
+		inclusion in the summary is determined by frequency of occurrence across sentences. Note that different
+		inclusion thresholds are used for single- and multi-word aspects, as the former tend to be much more 
+		noisy (and so higher threshold is needed for high precision).
 		"""
 
+		# Get all the candidate aspects in each sentence
 		asp_sents = [sent.aspects for rev in self for sent in rev]
 		n_sents = float(len(asp_sents))
 
@@ -124,7 +134,7 @@ class Business(object):
 				elif len(asp) > 1:
 					multi_asps.append(" ".join(asp))
 				else:
-					continue # shouldn't happen
+					assert(False), "something wrong with aspect extraction" # shouldn't happen
 
 		# Get sufficiently-common single- and multi-word aspects
 		single_asps = [(asp, count) for asp, count in Counter(single_asps).most_common(30) if count/n_sents > single_word_thresh]
@@ -228,6 +238,9 @@ class Business(object):
 		"""
 		INPUT: Business
 		OUTPUT: list of strings
+
+		Not yet implemented. Have plans to do some additional business-level
+		aspect filtering to, e.g.,  
 		"""
 		# filter aspects that are too close to the restaurant's name?
 		return asps

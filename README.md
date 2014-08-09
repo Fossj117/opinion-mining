@@ -14,6 +14,10 @@ When one of the aspects is selected, YUMM displays a summary of reviewers' attit
 
 If you are interested in exploring YUMM's code, the main directories of interest are `./classes`, which contains the code for YUMM's primary summary-generation pipeline, and `./modeling`, which contains the code for training/optimizing the machine learning models that currently power YUMM.  
 
+### Other Notes
+
+I'm in the process of writing more detailed technical/non-technical documentation for YUMM. Non-technical overviews will be posted on my blog [here](http://jfoss.ghost.io). Technical documentation will be included in this repo in the directory that it is most relevant to. 
+
 ### References
 
 The problem of automatic review summarization has been addressed in academic literature. See especially: 
