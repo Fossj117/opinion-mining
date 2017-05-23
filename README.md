@@ -2,7 +2,7 @@
 
 Yelp Summarization Miner (or **YUMM**) is an automated system that uses machine learning and natural language processing to generate a digestable, human-understandable, and browsable summary of the opinions expressed in a corpus of Yelp reviews about a particular restaurant. YUMM's summary aims to provide the user with an at-a-glance understanding of a restaurant's features (or *aspects*) as well as reviewers' attitudes towards these features. 
 
-You can check out a demo of YUMM online [here](http://www.jeffreyfossett.com). If that's not your style, here's a screenshot of YUMM in action (for a restaurant called **Zinburger**): 
+You can check out a demo of YUMM online [here](http://www.yumm.jeffreyfossett.com). If that's not your style, here's a screenshot of YUMM in action (for a restaurant called **Zinburger**): 
 
 ![](yumm_screenshot.png)
 
@@ -13,10 +13,6 @@ When one of the aspects is selected, YUMM displays a summary of reviewers' attit
 ### Code Overview
 
 If you are interested in exploring YUMM's code, the main directories of interest are `./classes`, which contains the code for YUMM's primary summary-generation pipeline, and `./modeling`, which contains the code for training/optimizing the machine learning models that currently power YUMM.  
-
-### Other Notes
-
-I'm in the process of writing more detailed technical/non-technical documentation for YUMM. Non-technical overviews will be posted on my blog [here](http://jfoss.ghost.io). Technical documentation will be included in this repo in the directory that it is most relevant to. 
 
 ### References
 
