@@ -2,7 +2,7 @@
 
 Yelp Summarization Miner (or **YUMM**) is an automated system that uses machine learning and natural language processing to generate a digestable, human-understandable, and browsable summary of the opinions expressed in a corpus of Yelp reviews about a particular restaurant. YUMM's summary aims to provide the user with an at-a-glance understanding of a restaurant's features (or *aspects*) as well as reviewers' attitudes towards these features. 
 
-You can check out a demo of YUMM online [here](http://www.yumm.jeffreyfossett.com). If that's not your style, here's a screenshot of YUMM in action (for a restaurant called **Zinburger**): 
+You can check out a demo of YUMM online [here](http://yumm.jeffreyfossett.com). If that's not your style, here's a screenshot of YUMM in action (for a restaurant called **Zinburger**): 
 
 ![](yumm_screenshot.png)
 
