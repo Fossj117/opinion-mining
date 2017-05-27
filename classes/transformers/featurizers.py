@@ -1,6 +1,7 @@
 from __future__ import division
 from tokenizers import NegationSuffixAdder
 from collections import OrderedDict
+import os
 
 class BaseFeaturizer(object):
 
@@ -45,7 +46,7 @@ class MetaFeaturizer(BaseFeaturizer):
 
 class SubjFeaturizer(BaseFeaturizer):
 	
-	PATH_TO_LEXICON = '/Users/jeff/Projects/yelp_opinion_mining/raw_data/Lexicons/subjectivity_clues_hltemnlp05/subjclueslen1-HLTEMNLP05.tff'
+	PATH_TO_LEXICON = os.path.abspath(os.path.join(os.path.dirname( __file__ ), '..', 'files/subjclueslen1-HLTEMNLP05.tff')) 
 
 	TAG_MAP = {'NN': 'noun',
 			   'NNS': 'noun',
@@ -89,7 +90,6 @@ class SubjFeaturizer(BaseFeaturizer):
 
 		Parses one line of the subjectivity lexicon
 		"""
-		
 		line = raw_line.strip().split(" ")
 		out = dict([o.split("=") for o in line])
 
@@ -187,7 +187,7 @@ class LiuFeaturizer(BaseFeaturizer):
     Download lexicon at: http://www.cs.uic.edu/~liub/FBS/opinion-lexicon-English.rar
 	"""
 
-	PATH_TO_LEXICONS = '/Users/jeff/Projects/yelp_opinion_mining/raw_data/Lexicons'
+	PATH_TO_LEXICONS = os.path.abspath(os.path.join(os.path.dirname( __file__ ), '..', 'files'))
 	NEG_SUFFIXER = NegationSuffixAdder()
 
 	def __init__(self):
@@ -195,8 +195,8 @@ class LiuFeaturizer(BaseFeaturizer):
 		Read in the lexicons. 
 		"""
 
-		pos_path = self.PATH_TO_LEXICONS + "/Liu/positive-words.txt"
-		neg_path = self.PATH_TO_LEXICONS + "/Liu/negative-words.txt"
+		pos_path = self.PATH_TO_LEXICONS + "/positive-words.txt"
+		neg_path = self.PATH_TO_LEXICONS + "/negative-words.txt"
 
 		self.pos_lex = self.read_lexicon(pos_path)
 		self.neg_lex = self.read_lexicon(neg_path)

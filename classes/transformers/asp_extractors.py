@@ -53,7 +53,7 @@ class SentenceAspectExtractor():
         Generator of NP (nounphrase) leaf nodes of a chunk tree.
         """
 
-        for subtree in tree.subtrees(filter=lambda t: t.node=='NP'):
+        for subtree in tree.subtrees(filter=lambda t: t.label()=='NP'):
             yield subtree.leaves()
 
     def valid_aspect(self, aspect):
